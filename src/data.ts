@@ -9,13 +9,13 @@ export const items = [
 
 export const groups = ["group1", "group2"];
 
-export const bigGroups = ["group1", "group2", "group3", "group4", "group5"];
+export const biggroups = ["group1", "group2", "group3", "group4", "group5"];
 
-export const bigItems = Array.from({ length: 30 }, (_, index) => {
-  const groupIndex = Math.floor(Math.random() * bigGroups.length);
+export const bigitems = Array.from({ length: 30 }, (_, index) => {
+  const groupIndex = Math.floor(Math.random() * biggroups.length);
   return {
     id: index + 1,
-    group: bigGroups[groupIndex],
+    group: biggroups[groupIndex],
     value: `Item ${index + 1}`,
   };
 });

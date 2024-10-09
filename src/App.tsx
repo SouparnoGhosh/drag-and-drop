@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import "./styles/App.css";
-import { items as initialItems, groups as initialGroups } from "./data";
+import { bigitems as initialItems, biggroups as initialGroups } from "./data";
 
 const Dnd: React.FC = () => {
   const [items, setItems] = useState(initialItems);
@@ -20,6 +20,7 @@ const Dnd: React.FC = () => {
     id: number
   ) => {
     e.preventDefault();
+    console.log(group);
     if (draggingId === null) return;
 
     const newItems = [...items];

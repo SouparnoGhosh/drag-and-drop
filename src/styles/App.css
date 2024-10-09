@@ -7,7 +7,7 @@
   padding: 20px;
   box-sizing: border-box;
   background-color: #f0f0f0; /* Light grey background */
-  border: 4px solid #000; /* Thick black border */
+  border: 4px solid #000; /* black border */
 }
 
 .groups {
@@ -16,7 +16,7 @@
   padding: 20px;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px; /* Add gap between groups */
+  gap: 20px; 
 }
 
 .group {
@@ -24,8 +24,8 @@
   padding: 20px;
   min-height: 16rem;
   background-color: #ffcc00; /* Bright yellow background */
-  border: 4px solid #000; /* Thick black border */
-  box-shadow: 8px 8px 0 #000; /* Bold shadow effect */
+  border: 4px solid #000; /* black border */
+  box-shadow: 8px 8px 0 #000; 
   position: relative;
 }
 
@@ -33,7 +33,7 @@
   color: #000; /* Black text */
   padding: 10px;
   margin-top: 0;
-  border: 4px solid #000; /* Thick black border */
+  border: 4px solid #000; /* black border */
   background-color: #fff; /* White background */
   font-weight: bold;
   font-size: 1.2rem;
@@ -44,8 +44,8 @@
   margin: 20px;
   padding: 20px;
   background-color: #ff9900; /* Bright orange background */
-  border: 4px solid #000; /* Thick black border */
-  box-shadow: 8px 8px 0 #000; /* Bold shadow effect */
+  border: 4px solid #000; /* black border */
+  box-shadow: 8px 8px 0 #000; 
 }
 
 .thing {
@@ -54,8 +54,8 @@
   margin: 5px;
   margin-bottom: 15px;
   padding: 10px;
-  border: 4px solid #000; /* Thick black border */
-  box-shadow: 4px 4px 0 #000; /* Bold shadow effect */
+  border: 4px solid #000; /* black border */
+  box-shadow: 4px 4px 0 #000;
   font-weight: bold;
   font-size: 1rem;
   text-align: center;
@@ -64,5 +64,5 @@
 .drag-over {
   opacity: 0.7;
   background-color: #ff6666; /* Light red background */
-  border: 4px dashed #000; /* Thick dashed black border */
+  border: 4px dashed #000;
 }
