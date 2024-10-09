@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import "./styles/App.css";
+import { bigItems as initialItems, bigGroups as initialGroups } from "@/data";
+// import { items as initialItems, groups as initialGroups } from "@/data";
+
 
 const Dnd: React.FC = () => {
-  const groups = ["group1", "group2"];
-  const [items, setItems] = useState([
-    { id: 1, group: groups[0], value: "Item 1" },
-    { id: 2, group: groups[0], value: "Item 2" },
-    { id: 3, group: groups[0], value: "Item 3" },
-    { id: 4, group: groups[1], value: "Item 4" },
-    { id: 5, group: groups[1], value: "Item 5" },
-  ]);
+  const groups = initialGroups;
+  const [items, setItems] = useState(initialItems);
 
   const initialOrders = groups.reduce((acc, group) => {
     acc[group] = items
@@ -20,52 +17,68 @@ const Dnd: React.FC = () => {
   }, {} as Record<string, number[]>);
 
   const [orders, setOrders] = useState(initialOrders);
-  const [dragging, setDragging] = useState<HTMLElement | null>(null);
+  const [draggingId, setDraggingId] = useState<number | null>(null);
 
-  const handleDragStart = (e: React.DragEvent<HTMLElement>) => {
-    setDragging(e.target as HTMLElement);
-    e.dataTransfer.effectAllowed = "move";
+  const handleDragStart = (e: React.PointerEvent<HTMLElement>, id: number) => {
+    setDraggingId(id);
+    (e as unknown as React.DragEvent<HTMLElement>).dataTransfer.effectAllowed =
+      "move";
+  };
+
+  const handleDragOver = (
+    e: React.DragEvent<HTMLElement>,
+    group: string,
+    id: number
+  ) => {
+    e.preventDefault();
+    if (draggingId === null) return;
+
+    const newOrder = [...orders[group]];
+    const draggedIndex = newOrder.indexOf(draggingId);
+    const hoverIndex = newOrder.indexOf(id);
+
+    if (
+      draggedIndex !== -1 &&
+      hoverIndex !== -1 &&
+      draggedIndex !== hoverIndex
+    ) {
+      newOrder.splice(draggedIndex, 1);
+      newOrder.splice(hoverIndex, 0, draggingId);
+      setOrders((prevOrders) => ({
+        ...prevOrders,
+        [group]: newOrder,
+      }));
+    }
   };
 
   const handleDrop = (e: React.DragEvent<HTMLElement>, group: string) => {
     e.preventDefault();
-    if (dragging) {
-      const draggedId = parseInt(dragging.id);
-      const draggedItem = items.find((item) => item.id === draggedId);
+    if (draggingId === null) return;
 
-      if (draggedItem) {
-        const oldGroup = draggedItem.group;
-        const newOrder = [...orders[group]];
-        const oldOrder = [...orders[oldGroup]];
+    const draggedItem = items.find((item) => item.id === draggingId);
+    if (draggedItem && draggedItem.group !== group) {
+      setItems((prevItems) =>
+        prevItems.map((item) =>
+          item.id === draggingId ? { ...item, group } : item
+        )
+      );
 
-        // Remove from old group
-        const oldIndex = oldOrder.indexOf(draggedId);
-        if (oldIndex > -1) {
-          oldOrder.splice(oldIndex, 1);
-        }
+      const oldGroup = draggedItem.group;
+      const newOrder = [...orders[group], draggingId];
+      const oldOrder = orders[oldGroup].filter((id) => id !== draggingId);
 
-        // Add to new group
-        newOrder.push(draggedId);
-
-        setItems((prevItems) =>
-          prevItems.map((item) =>
-            item.id === draggedId ? { ...item, group } : item
-          )
-        );
-
-        setOrders((prevOrders) => ({
-          ...prevOrders,
-          [oldGroup]: oldOrder,
-          [group]: newOrder,
-        }));
-
-        setDragging(null);
-      }
+      setOrders((prevOrders) => ({
+        ...prevOrders,
+        [oldGroup]: oldOrder,
+        [group]: newOrder,
+      }));
     }
+
+    setDraggingId(null);
   };
 
   const handleDragEnd = () => {
-    setDragging(null);
+    setDraggingId(null);
   };
 
   return (
@@ -87,8 +100,11 @@ const Dnd: React.FC = () => {
                   id={thing!.id.toString()}
                   className="thing"
                   draggable
-                  onDragStart={(e) => handleDragStart(e)}
-                  onDragEnd={() => handleDragEnd()}
+                  onPointerDown={(e: React.PointerEvent<HTMLElement>) =>
+                    handleDragStart(e, thing!.id)
+                  }
+                  onDragOver={(e) => handleDragOver(e, group, thing!.id)}
+                  onDragEnd={handleDragEnd}
                   layout
                   whileHover={{ scale: 1.1 }}
                   whileDrag={{ scale: 1.2 }}
